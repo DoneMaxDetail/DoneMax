@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DoneMax Detailing — Precision Elevated</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ═══════════════════════════════════════
+     DESIGN TOKENS
+  ═══════════════════════════════════════ */
+  :root {
+    --accent: #ff6a00;
+    --accent-glow: rgba(255,106,0,0.35);
+    --accent-dim: rgba(255,106,0,0.12);
+    --white: #ffffff;
+    --off-white: #f5f3ef;
+    --glass-bg: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.12);
+    --glass-blur: 18px;
+    --dark: #0a0a0a;
+    --dark-mid: #111111;
+    --dark-surface: #161616;
+    --text-primary: #f0ece4;
+    --text-secondary: rgba(240,236,228,0.55);
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Outfit', sans-serif;
+    --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-base: 0.4s var(--ease-smooth);
+    --nav-h: 72px;
+    --radius-card: 20px;
+    --radius-pill: 100px;
+  }
+  [data-theme="light"] {
+    --glass-bg: rgba(255,255,255,0.72);
+    --glass-border: rgba(0,0,0,0.08);
+    --dark: #f5f3ef;
+    --dark-mid: #eceae5;
+    --dark-surface: #e8e5de;
+    --text-primary: #0d0c0a;
+    --text-secondary: rgba(13,12,10,0.5);
+    --accent-glow: rgba(255,106,0,0.25);
+  }
+
+  /* ═══════════════════════════════════════
+     RESET & BASE
+  ═══════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    font-family: var(--font-body);
+    background: var(--dark);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    cursor: auto;
+  }
+  img, video { max-width: 100%; display: block; }
+  a { text-decoration: none; color: inherit; }
+
+  /* ═══════════════════════════════════════
+     NAVBAR
+  ═══════════════════════════════════════ */
+  nav {
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+    height: var(--nav-h);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
+    transition: background 0.5s var(--ease-smooth), backdrop-filter 0.5s,
+                box-shadow 0.5s, border-bottom 0.5s;
+  }
+  nav.scrolled {
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+  }
+  [data-theme="light"] nav.scrolled {
+    background: rgba(245,243,239,0.88);
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.55rem; font-weight: 600;
+    letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links {
+    display: flex; align-items: center; gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.82rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-secondary);
+    transition: color var(--transition-base);
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px; background: var(--accent);
+    transition: width 0.3s var(--ease-smooth);
+  }
+  .nav-links a:hover { color: var(--text-primary); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-right { display: flex; align-items: center; gap: 1rem; }
+  .theme-toggle {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background var(--transition-base), transform 0.3s;
+    backdrop-filter: blur(8px);
+  }
+  .theme-toggle:hover { transform: rotate(20deg); background: var(--accent-dim); }
+  .nav-cta {
+    padding: 0.5rem 1.25rem;
+    background: var(--accent); color: #fff;
+    border-radius: var(--radius-pill);
+    font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    transition: box-shadow var(--transition-base), transform 0.2s;
+  }
+  .nav-cta:hover {
+    box-shadow: 0 0 24px var(--accent-glow);
+    transform: translateY(-1px);
+  }
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    cursor: pointer; padding: 4px; background: none; border: none;
+  }
+  .hamburger span {
+    width: 24px; height: 1.5px; background: var(--accent);
+    transition: all 0.3s; display: block;
+  }
+
+  /* ═══════════════════════════════════════
+     HERO
+  ═══════════════════════════════════════ */
+  #hero {
+    position: relative; width: 100vw; height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  #hero-video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; z-index: 0;
+    transform: scale(1.04);
+    animation: heroScale 12s var(--ease-smooth) forwards;
+  }
+  @keyframes heroScale {
+    to { transform: scale(1); }
+  }
+  .hero-overlay {
+    position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(
+      135deg,
+      rgba(0,0,0,0.72) 0%,
+      rgba(0,0,0,0.45) 50%,
+      rgba(0,0,0,0.65) 100%
+    );
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center;
+    animation: heroFadeIn 1.4s var(--ease-smooth) 0.3s both;
+    padding: 0 1.5rem;
+  }
+  @keyframes heroFadeIn {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero-eyebrow {
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 1.2rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: ''; width: 32px; height: 1px; background: var(--accent); opacity: 0.6;
+  }
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 7vw, 6.5rem);
+    font-weight: 300; line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.25rem;
+    color: #fff;
+  }
+  .hero-title em {
+    font-style: italic; color: var(--accent);
+  }
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-weight: 300; color: rgba(255,255,255,0.65);
+    letter-spacing: 0.04em;
+    margin-bottom: 2.5rem;
+  }
+  .hero-actions { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .btn-glass {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.9rem 2.2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-pill);
+    color: #fff; font-size: 0.88rem; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+  }
+  .btn-glass:hover {
+    background: rgba(255,106,0,0.18);
+    border-color: var(--accent);
+    box-shadow: 0 0 32px var(--accent-glow);
+    transform: translateY(-2px);
+  }
+  .btn-solid {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.9rem 2.2rem;
+    background: var(--accent);
+    border: 1px solid transparent;
+    border-radius: var(--radius-pill);
+    color: #fff; font-size: 0.88rem; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    cursor: pointer;
+    transition: box-shadow 0.3s, transform 0.2s;
+  }
+  .btn-solid:hover {
+    box-shadow: 0 0 36px var(--accent-glow), 0 8px 24px rgba(0,0,0,0.3);
+    transform: translateY(-2px);
+  }
+  .scroll-hint {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    animation: heroFadeIn 1s 1.8s both;
+  }
+  .scroll-hint span { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+  .scroll-line {
+    width: 1px; height: 48px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  /* ═══════════════════════════════════════
+     INTRO BAND
+  ═══════════════════════════════════════ */
+  .intro-band {
+    background: var(--dark-mid);
+    padding: 5rem clamp(1.5rem,8vw,8rem);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 3rem; flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+  .intro-stat {
+    text-align: center; flex: 1; min-width: 120px;
+  }
+  .intro-stat .num {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 300; color: var(--accent); line-height: 1;
+  }
+  .intro-stat .label {
+    font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-secondary); margin-top: 0.4rem;
+  }
+  .intro-divider { width: 1px; height: 60px; background: var(--glass-border); }
+
+  /* ═══════════════════════════════════════
+     CINEMATIC SCROLL SECTION
+  ═══════════════════════════════════════ */
+  #cinematic-wrapper {
+    position: relative;
+    height: 250vh;
+  }
+  #cinematic-sticky {
+    position: sticky; top: 0;
+    width: 100%; height: 100vh;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #frame-canvas {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .cinematic-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom,
+      rgba(0,0,0,0.25) 0%,
+      rgba(0,0,0,0.1) 40%,
+      rgba(0,0,0,0.55) 100%
+    );
+    z-index: 1;
+  }
+  .cinematic-texts {
+    position: absolute; inset: 0; z-index: 2;
+    display: flex; align-items: flex-end; justify-content: flex-start;
+    padding: clamp(2rem, 6vw, 5rem);
+  }
+  .cinematic-label {
+    position: absolute; opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s var(--ease-smooth), transform 0.7s var(--ease-smooth);
+    pointer-events: none;
+  }
+  .cinematic-label.active {
+    opacity: 1; transform: translateY(0);
+  }
+  .cinematic-label .step-num {
+    font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.5rem;
+  }
+  .cinematic-label .step-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 6vw, 5rem);
+    font-weight: 300; line-height: 1.1;
+    color: #fff;
+  }
+  .cinematic-label .step-desc {
+    font-size: clamp(0.85rem, 1.5vw, 1rem);
+    color: rgba(255,255,255,0.55); margin-top: 0.75rem;
+    max-width: 36ch;
+  }
+  .progress-bar-track {
+    position: absolute; right: clamp(1.5rem,4vw,3rem); top: 50%;
+    transform: translateY(-50%);
+    width: 2px; height: 160px;
+    background: rgba(255,255,255,0.12);
+    z-index: 3; border-radius: 2px;
+  }
+  .progress-bar-fill {
+    width: 100%; background: var(--accent);
+    height: 0%; border-radius: 2px;
+    transition: height 0.15s linear;
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+  /* Fallback gradient when no frames load */
+  .cinematic-fallback {
+    position: absolute; inset: 0; z-index: 0;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0d00 50%, #0a0a0a 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fallback-car {
+    font-size: 8rem; opacity: 0.08;
+    animation: fallbackPulse 3s ease-in-out infinite;
+  }
+  @keyframes fallbackPulse {
+    0%,100% { transform: scale(1); opacity: 0.08; }
+    50% { transform: scale(1.05); opacity: 0.12; }
+  }
+
+  /* ═══════════════════════════════════════
+     SERVICES
+  ═══════════════════════════════════════ */
+  #services {
+    padding: 8rem clamp(1.5rem,8vw,8rem);
+    background: var(--dark);
+    position: relative; overflow: hidden;
+  }
+  #services::before {
+    content: ''; position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,106,0,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .section-header {
+    text-align: center; margin-bottom: 4rem;
+  }
+  .section-eyebrow {
+    font-size: 0.68rem; letter-spacing: 0.26em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    font-weight: 300; line-height: 1.15;
+    color: var(--text-primary);
+  }
+  .section-title strong { font-weight: 600; }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .service-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-card);
+    padding: 2.5rem 2rem;
+    cursor: pointer;
+    transition: box-shadow 0.4s var(--ease-smooth), border-color 0.4s, background 0.4s;
+    position: relative; overflow: hidden;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .service-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(255,106,0,0.1) 0%, transparent 65%);
+    opacity: 0; transition: opacity 0.5s;
+  }
+  .service-card:hover::before { opacity: 1; }
+  .service-card:hover {
+    box-shadow: 0 0 40px rgba(255,106,0,0.18), 0 24px 48px rgba(0,0,0,0.25);
+    border-color: rgba(255,106,0,0.35);
+  }
+  .service-icon {
+    width: 56px; height: 56px;
+    background: var(--accent-dim); border: 1px solid rgba(255,106,0,0.2);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; margin-bottom: 1.8rem;
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+  .service-card:hover .service-icon {
+    background: rgba(255,106,0,0.22);
+    box-shadow: 0 0 20px rgba(255,106,0,0.3);
+  }
+  .service-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem; font-weight: 400;
+    color: var(--text-primary); margin-bottom: 0.75rem;
+  }
+  .service-desc {
+    font-size: 0.88rem; color: var(--text-secondary);
+    line-height: 1.7; margin-bottom: 1.75rem;
+  }
+  .service-features {
+    list-style: none; display: flex; flex-direction: column; gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+  .service-features li {
+    font-size: 0.78rem; color: var(--text-secondary);
+    display: flex; align-items: center; gap: 0.6rem;
+    letter-spacing: 0.03em;
+  }
+  .service-features li::before {
+    content: ''; width: 4px; height: 4px;
+    background: var(--accent); border-radius: 50%; flex-shrink: 0;
+  }
+  .service-link {
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent);
+    display: flex; align-items: center; gap: 0.5rem;
+    transition: gap 0.3s;
+  }
+  .service-card:hover .service-link { gap: 0.85rem; }
+  .service-price {
+    position: absolute; top: 2rem; right: 2rem;
+    font-family: var(--font-display);
+    font-size: 0.85rem; color: var(--text-secondary);
+  }
+  .service-price strong { color: var(--accent); font-size: 1.1rem; }
+
+  /* ═══════════════════════════════════════
+     GALLERY
+  ═══════════════════════════════════════ */
+  #gallery {
+    padding: 8rem clamp(1.5rem,8vw,8rem);
+    background: var(--dark-mid);
+    position: relative;
+  }
+  .gallery-tabs {
+    display: flex; gap: 0.5rem;
+    justify-content: center; margin-bottom: 3rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-pill);
+    padding: 0.4rem;
+    width: fit-content; margin-left: auto; margin-right: auto;
+  }
+  .tab-btn {
+    padding: 0.6rem 1.6rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer; border: none;
+    background: transparent; color: var(--text-secondary);
+    transition: all 0.3s var(--ease-smooth);
+  }
+  .tab-btn.active {
+    background: var(--accent); color: #fff;
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Standard gallery grid */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+  .gallery-item {
+    aspect-ratio: 4/3;
+    border-radius: 14px; overflow: hidden;
+    position: relative; cursor: pointer;
+    background: var(--dark-surface);
+  }
+  .gallery-item-inner {
+    width: 100%; height: 100%;
+    background: var(--dark-surface);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; opacity: 0.12;
+    transition: transform 0.6s var(--ease-smooth), opacity 0.4s;
+  }
+  .gallery-item:hover .gallery-item-inner {
+    transform: scale(1.06); opacity: 0.18;
+  }
+  .gallery-item-img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease-smooth);
+  }
+  .gallery-item:hover .gallery-item-img { transform: scale(1.06); }
+  .gallery-item-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+    opacity: 0; transition: opacity 0.4s;
+    display: flex; align-items: flex-end; padding: 1.2rem;
+  }
+  .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+  .gallery-item-label {
+    font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: #fff;
+  }
+
+  /* Before/After slider */
+  .ba-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .ba-card {
+    border-radius: 14px; overflow: hidden;
+    position: relative; aspect-ratio: 16/10;
+    cursor: col-resize; user-select: none;
+    background: var(--dark-surface);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .ba-before, .ba-after {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem;
+  }
+  .ba-before { background: linear-gradient(135deg, #1a1008, #2a1a0a); }
+  .ba-after  { background: linear-gradient(135deg, #0a0f1a, #0d1520); }
+  .ba-before-img, .ba-after-img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .ba-after {
+    clip-path: inset(0 50% 0 0);
+    transition: none;
+  }
+  .ba-handle {
+    position: absolute; top: 0; bottom: 0;
+    left: 50%; transform: translateX(-50%);
+    width: 2px; background: #fff; z-index: 10;
+    cursor: col-resize;
+  }
+  .ba-handle-circle {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 36px; height: 36px;
+    background: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    font-size: 0.7rem; color: #333; font-weight: 700;
+  }
+  .ba-label-before, .ba-label-after {
+    position: absolute; bottom: 1rem; z-index: 5;
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    background: rgba(0,0,0,0.55); padding: 0.3rem 0.6rem; border-radius: 4px;
+    color: rgba(255,255,255,0.8);
+  }
+  .ba-label-before { left: 1rem; }
+  .ba-label-after  { right: 1rem; }
+
+  /* ═══════════════════════════════════════
+     PROCESS SECTION
+  ═══════════════════════════════════════ */
+  #process {
+    padding: 8rem clamp(1.5rem,8vw,8rem);
+    background: var(--dark);
+    position: relative; overflow: hidden;
+  }
+  #process::after {
+    content: ''; position: absolute;
+    bottom: -100px; left: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(255,106,0,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0; margin-top: 4rem;
+    position: relative;
+  }
+  .process-steps::before {
+    content: ''; position: absolute; top: 28px; left: 0; right: 0;
+    height: 1px; background: linear-gradient(to right,
+      transparent, var(--accent), transparent);
+    opacity: 0.3;
+  }
+  .process-step {
+    padding: 2rem 1.5rem 1.5rem;
+    position: relative; text-align: center;
+  }
+  .step-dot {
+    width: 56px; height: 56px;
+    background: var(--dark-surface); border: 1px solid rgba(255,106,0,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 1.2rem;
+    transition: all 0.4s var(--ease-smooth);
+    position: relative; z-index: 1;
+    background: var(--dark);
+  }
+  .process-step:hover .step-dot {
+    background: var(--accent);
+    box-shadow: 0 0 24px var(--accent-glow);
+    transform: scale(1.1);
+  }
+  .step-num {
+    position: absolute; top: -8px; right: -8px;
+    width: 20px; height: 20px;
+    background: var(--accent); border-radius: 50%;
+    font-size: 0.6rem; font-weight: 700; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem; font-weight: 400; color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+  .step-desc {
+    font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6;
+  }
+
+  /* ═══════════════════════════════════════
+     TESTIMONIALS
+  ═══════════════════════════════════════ */
+  #testimonials {
+    padding: 8rem clamp(1.5rem,8vw,8rem);
+    background: var(--dark-mid);
+  }
+  .testimonials-track {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+    margin-top: 3.5rem;
+  }
+  .testimonial-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-card);
+    padding: 2rem;
+    transition: transform 0.4s var(--ease-smooth), box-shadow 0.4s;
+  }
+  .testimonial-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,106,0,0.1);
+  }
+  .stars {
+    color: var(--accent); font-size: 0.75rem; letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  .testimonial-text {
+    font-family: var(--font-display);
+    font-size: 1.05rem; font-weight: 300; line-height: 1.65;
+    color: var(--text-primary); margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+  .testimonial-author {
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .author-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--accent-dim); border: 1px solid rgba(255,106,0,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+  }
+  .author-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
+  .author-car  { font-size: 0.72rem; color: var(--text-secondary); letter-spacing: 0.04em; }
+
+  /* ═══════════════════════════════════════
+     BOOKING CTA
+  ═══════════════════════════════════════ */
+  #booking {
+    padding: 9rem clamp(1.5rem,8vw,8rem);
+    background: var(--dark);
+    text-align: center; position: relative; overflow: hidden;
+  }
+  #booking::before {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(255,106,0,0.08) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .booking-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    font-weight: 300; line-height: 1.1;
+    margin-bottom: 1.25rem; position: relative;
+  }
+  .booking-sub {
+    font-size: 1rem; color: var(--text-secondary);
+    margin-bottom: 3rem; max-width: 48ch; margin-left: auto; margin-right: auto;
+  }
+  .booking-form {
+    display: flex; gap: 0.75rem; flex-wrap: wrap;
+    justify-content: center; max-width: 560px; margin: 0 auto;
+  }
+  .booking-input {
+    flex: 1; min-width: 200px;
+    padding: 0.9rem 1.4rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-pill);
+    color: var(--text-primary); font-family: var(--font-body);
+    font-size: 0.88rem; outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .booking-input::placeholder { color: var(--text-secondary); }
+  .booking-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+
+  /* ═══════════════════════════════════════
+     FOOTER
+  ═══════════════════════════════════════ */
+  footer {
+    background: var(--dark-surface);
+    border-top: 1px solid var(--glass-border);
+    padding: 3rem clamp(1.5rem,8vw,8rem);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1.5rem;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 1.3rem; font-weight: 600; color: var(--text-primary);
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-links {
+    display: flex; gap: 2rem; list-style: none; flex-wrap: wrap;
+  }
+  .footer-links a {
+    font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-secondary); transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-copy {
+    font-size: 0.72rem; color: var(--text-secondary);
+    width: 100%; text-align: center; padding-top: 1.5rem;
+    border-top: 1px solid var(--glass-border); margin-top: 0.5rem;
+  }
+
+  /* ═══════════════════════════════════════
+     SCROLL REVEAL
+  ═══════════════════════════════════════ */
+  .reveal {
+    opacity: 0; transform: translateY(36px);
+    transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-smooth);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.12s; }
+  .reveal-delay-2 { transition-delay: 0.22s; }
+  .reveal-delay-3 { transition-delay: 0.32s; }
+
+  /* ═══════════════════════════════════════
+     MOBILE MENU
+  ═══════════════════════════════════════ */
+  .mobile-menu {
+    position: fixed; inset: 0; z-index: 990;
+    background: rgba(10,10,10,0.97);
+    backdrop-filter: blur(32px);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 2.5rem;
+    transform: translateY(-100%);
+    transition: transform 0.5s var(--ease-smooth);
+  }
+  .mobile-menu.open { transform: translateY(0); }
+  .mobile-menu a {
+    font-family: var(--font-display);
+    font-size: 2.5rem; font-weight: 300;
+    color: var(--text-primary);
+    transition: color 0.3s;
+  }
+  .mobile-menu a:hover { color: var(--accent); }
+
+  /* ═══════════════════════════════════════
+     RESPONSIVE
+  ═══════════════════════════════════════ */
+  @media (max-width: 768px) {
+    .nav-links, .intro-divider { display: none; }
+    .hamburger { display: flex; }
+    .intro-band { justify-content: center; }
+    .process-steps::before { display: none; }
+  }
+  @media (max-width: 480px) {
+    .hero-actions { flex-direction: column; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Light theme adjustments */
+  [data-theme="light"] .hero-overlay {
+    background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%);
+  }
+  [data-theme="light"] .service-card {
+    background: rgba(255,255,255,0.82);
+    border-color: rgba(0,0,0,0.07);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  }
+  [data-theme="light"] nav.scrolled { background: rgba(245,243,239,0.92); }
+  [data-theme="light"] .cinematic-fallback {
+    background: linear-gradient(135deg, #e8e0d0 0%, #f0e8d8 50%, #e8e0d0 100%);
+  }
+</style>
+</head>
+<body>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#services" onclick="closeMobileMenu()">Services</a>
+  <a href="#gallery" onclick="closeMobileMenu()">Gallery</a>
+  <a href="#process" onclick="closeMobileMenu()">Process</a>
+  <a href="#booking" onclick="closeMobileMenu()">Book Now</a>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-logo">Done<span>Max</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    <a href="#booking" class="nav-cta">Book Now</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <video id="hero-video" autoplay muted loop playsinline poster="">
+    <source src="background.mp4" type="video/mp4" />
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Premium Auto Care</div>
+    <h1 class="hero-title">
+      Precision Detailing.<br><em>Elevated</em> Finish.
+    </h1>
+    <p class="hero-sub">Premium interior &amp; exterior detailing — restored to perfection.</p>
+    <div class="hero-actions">
+      <a href="#booking" class="btn-solid">Book Now &nbsp;→</a>
+      <a href="#services" class="btn-glass">Explore Services</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<div class="intro-band">
+  <div class="intro-stat reveal">
+    <div class="num" data-count="20" data-suffix="+">0</div>
+    <div class="label">Cars Detailed</div>
+  </div>
+  <div class="intro-divider"></div>
+  <div class="intro-stat reveal reveal-delay-1">
+    <div class="num" data-count="2" data-suffix="+">0</div>
+    <div class="label">Years Experience</div>
+  </div>
+  <div class="intro-divider"></div>
+  <div class="intro-stat reveal reveal-delay-2">
+    <div class="num" data-count="100" data-suffix="%">0</div>
+    <div class="label">Satisfaction</div>
+  </div>
+</div>
+
+<!-- CINEMATIC SCROLL SECTION -->
+<div id="cinematic-wrapper">
+  <div id="cinematic-sticky">
+    <!-- Fallback bg -->
+    <div class="cinematic-fallback">
+      <div class="fallback-car">🚗</div>
+    </div>
+    <!-- Canvas for frames -->
+    <canvas id="frame-canvas"></canvas>
+    <div class="cinematic-overlay"></div>
+
+    <!-- Progress bar -->
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-header reveal">
+    <div class="section-eyebrow">What We Offer</div>
+    <h2 class="section-title">Our <strong>Premium</strong> Services</h2>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-price">from <strong>$149</strong></div>
+      <!-- sparkle/exterior icon -->
+      <div class="service-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      </div>
+      <h3 class="service-title">Exterior Detailing</h3>
+      <p class="service-desc">A thorough, meticulous cleaning and protection of every exterior surface — paint, glass, wheels, and trim.</p>
+      <ul class="service-features">
+        <li>Hand wash &amp; clay bar treatment</li>
+        <li>Paint decontamination</li>
+        <li>Machine polish &amp; gloss seal</li>
+        <li>Wheel &amp; tire deep clean</li>
+      </ul>
+      <a href="#booking" class="service-link">Book Service →</a>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-price">from <strong>$199</strong></div>
+      <!-- interior/seat icon -->
+      <div class="service-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1 9h16l1-9"/><path d="M7 9V6a5 5 0 0 1 10 0v3"/><path d="M5 18v3M19 18v3"/></svg>
+      </div>
+      <h3 class="service-title">Interior Deep Clean</h3>
+      <p class="service-desc">Complete interior restoration — from headliner to floor mats, leaving every surface spotless and refreshed.</p>
+      <ul class="service-features">
+        <li>Steam extraction &amp; sanitization</li>
+        <li>Leather conditioning</li>
+        <li>Odor elimination treatment</li>
+        <li>Dashboard &amp; vent detailing</li>
+      </ul>
+      <a href="#booking" class="service-link">Book Service →</a>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-price">from <strong>$349</strong></div>
+      <!-- shield/protection icon -->
+      <div class="service-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3 class="service-title">Paint Protection</h3>
+      <p class="service-desc">Long-term paint defense with ceramic coating or PPF — preserving your finish for years against the elements.</p>
+      <ul class="service-features">
+        <li>Ceramic nano-coating (9H)</li>
+        <li>Paint protection film (PPF)</li>
+        <li>UV &amp; chemical resistance</li>
+        <li>5-year coating warranty</li>
+      </ul>
+      <a href="#booking" class="service-link">Book Service →</a>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="section-header reveal">
+    <div class="section-eyebrow">Our Work</div>
+    <h2 class="section-title">The <strong>Results</strong> Speak</h2>
+  </div>
+
+  <div class="gallery-tabs reveal">
+    <button class="tab-btn active" data-tab="standard">Gallery</button>
+    <button class="tab-btn" data-tab="before-after">Before &amp; After</button>
+  </div>
+
+  <!-- Standard Gallery -->
+  <div class="tab-panel active" id="tab-standard">
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <div class="gallery-item-inner">🚘</div>
+        <img class="gallery-item-img" src="/DoneMax/gallery/img1.jpg" alt="Exterior detail" onerror="this.style.display='none'" loading="lazy" />
+        <div class="gallery-item-overlay"><span class="gallery-item-label">Full Exterior</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-item-inner">🛞</div>
+        <img class="gallery-item-img" src="/DoneMax/gallery/img2.jpg" alt="Wheel detail" onerror="this.style.display='none'" loading="lazy" />
+        <div class="gallery-item-overlay"><span class="gallery-item-label">Wheel Detail</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-item-inner">💺</div>
+        <img class="gallery-item-img" src="/DoneMax/gallery/img3.jpg" alt="Interior" onerror="this.style.display='none'" loading="lazy" />
+        <div class="gallery-item-overlay"><span class="gallery-item-label">Interior Clean</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-item-inner">✨</div>
+        <img class="gallery-item-img" src="/DoneMax/gallery/img4.jpg" alt="Paint polish" onerror="this.style.display='none'" loading="lazy" />
+        <div class="gallery-item-overlay"><span class="gallery-item-label">Paint Polish</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-item-inner">🪟</div>
+        <img class="gallery-item-img" src="/DoneMax/gallery/img5.jpg" alt="Glass treatment" onerror="this.style.display='none'" loading="lazy" />
+        <div class="gallery-item-overlay"><span class="gallery-item-label">Glass Treatment</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-item-inner">🏎️</div>
+        <img class="gallery-item-img" src="/DoneMax/gallery/img6.jpg" alt="Ceramic coating" onerror="this.style.display='none'" loading="lazy" />
+        <div class="gallery-item-overlay"><span class="gallery-item-label">Ceramic Coat</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Before / After -->
+  <div class="tab-panel" id="tab-before-after">
+    <div class="ba-grid">
+      <div class="ba-card" id="baCard0">
+        <div class="ba-before">
+          <span style="opacity:0.15">🚗</span>
+          <img class="ba-before-img" src="/DoneMax/before/b1.jpg" alt="Before" onerror="this.style.display='none'" loading="lazy" />
+        </div>
+        <div class="ba-after" id="baAfter0">
+          <span style="opacity:0.15">✨</span>
+          <img class="ba-after-img" src="/DoneMax/after/a1.jpg" alt="After" onerror="this.style.display='none'" loading="lazy" />
+        </div>
+        <div class="ba-handle" id="baHandle0"><div class="ba-handle-circle">⇔</div></div>
+        <div class="ba-label-before">Before</div>
+        <div class="ba-label-after">After</div>
+      </div>
+      <div class="ba-card" id="baCard1">
+        <div class="ba-before">
+          <span style="opacity:0.15">🚙</span>
+          <img class="ba-before-img" src="/DoneMax/before/b2.jpg" alt="Before" onerror="this.style.display='none'" loading="lazy" />
+        </div>
+        <div class="ba-after" id="baAfter1">
+          <span style="opacity:0.15">🌟</span>
+          <img class="ba-after-img" src="/DoneMax/after/a2.jpg" alt="After" onerror="this.style.display='none'" loading="lazy" />
+        </div>
+        <div class="ba-handle" id="baHandle1"><div class="ba-handle-circle">⇔</div></div>
+        <div class="ba-label-before">Before</div>
+        <div class="ba-label-after">After</div>
+      </div>
+      <div class="ba-card" id="baCard2">
+        <div class="ba-before">
+          <span style="opacity:0.15">🏎️</span>
+          <img class="ba-before-img" src="/DoneMax/before/b3.jpg" alt="Before" onerror="this.style.display='none'" loading="lazy" />
+        </div>
+        <div class="ba-after" id="baAfter2">
+          <span style="opacity:0.15">💎</span>
+          <img class="ba-after-img" src="/DoneMax/after/a3.jpg" alt="After" onerror="this.style.display='none'" loading="lazy" />
+        </div>
+        <div class="ba-handle" id="baHandle2"><div class="ba-handle-circle">⇔</div></div>
+        <div class="ba-label-before">Before</div>
+        <div class="ba-label-after">After</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-header reveal">
+    <div class="section-eyebrow">How It Works</div>
+    <h2 class="section-title">Your Car's <strong>Journey</strong></h2>
+  </div>
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <div class="step-dot">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span class="step-num">1</span></div>
+      <h4 class="step-title">Book &amp; Schedule</h4>
+      <p class="step-desc">Choose your service, pick a time. We come to you or you bring it in.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-1">
+      <div class="step-dot">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <span class="step-num">2</span></div>
+      <h4 class="step-title">Inspection</h4>
+      <p class="step-desc">We document and assess the vehicle before a single product is applied.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-2">
+      <div class="step-dot">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10c0 4-2.5 7.5-6 9"/><path d="M12 2a10 10 0 0 0-10 10c0 4 2.5 7.5 6 9"/><circle cx="12" cy="12" r="3"/></svg>
+        <span class="step-num">3</span></div>
+      <h4 class="step-title">Deep Treatment</h4>
+      <p class="step-desc">Our team uses professional-grade products and techniques, panel by panel.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-3">
+      <div class="step-dot">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <span class="step-num">4</span></div>
+      <h4 class="step-title">Quality Check</h4>
+      <p class="step-desc">Final inspection under specialized lighting. Not done until it's perfect.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-header reveal">
+    <div class="section-eyebrow">Client Reviews</div>
+    <h2 class="section-title">What They <strong>Say</strong></h2>
+  </div>
+  <div class="testimonials-track">
+    <div class="testimonial-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"My BMW looks better than the day I drove it off the lot. The ceramic coating is flawless — water just beads right off."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">🧑</div>
+        <div>
+          <div class="author-name">Marcus T.</div>
+          <div class="author-car">2023 BMW M4 Competition</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-1">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"The interior deep clean literally removed 3 years of dog hair and coffee stains. I had forgotten what the original color was."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👩</div>
+        <div>
+          <div class="author-name">Sarah L.</div>
+          <div class="author-car">2021 Audi Q7</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-2">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"Worth every penny. The paint correction on my Porsche is stunning. These guys are true craftsmen — zero shortcuts."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">🧔</div>
+        <div>
+          <div class="author-name">Daniel R.</div>
+          <div class="author-car">2022 Porsche 911 Carrera S</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="booking-title reveal">
+    Ready for the<br><span style="color:var(--accent); font-style:italic;">Ultimate Clean?</span>
+  </div>
+  <p class="booking-sub reveal">Leave your email and we'll have your booking confirmation ready within the hour.</p>
+  <div class="booking-form reveal">
+    <input class="booking-input" type="email" placeholder="Your email address" />
+    <button class="btn-solid" style="white-space:nowrap" onclick="handleBooking(this)">Book Now →</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Done<span>Max</span> Detailing</div>
+  <ul class="footer-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#booking">Contact</a></li>
+  </ul>
+  <p class="footer-copy">© 2025 DoneMax Detailing. All rights reserved. &nbsp;|&nbsp; Crafted with precision.</p>
+</footer>
+
+<script>
+/* ══════════════════════════════════════
+   NAVBAR SCROLL
+══════════════════════════════════════ */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+/* ══════════════════════════════════════
+   THEME TOGGLE
+══════════════════════════════════════ */
+const themeToggle = document.getElementById('themeToggle');
+let isDark = true;
+themeToggle.addEventListener('click', () => {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  themeToggle.textContent = isDark ? '🌙' : '☀️';
+});
+
+/* ══════════════════════════════════════
+   HAMBURGER / MOBILE MENU
+══════════════════════════════════════ */
+const hamburger   = document.getElementById('hamburger');
+const mobileMenu  = document.getElementById('mobileMenu');
+let menuOpen = false;
+hamburger.addEventListener('click', () => {
+  menuOpen = !menuOpen;
+  mobileMenu.classList.toggle('open', menuOpen);
+  hamburger.querySelectorAll('span')[0].style.transform = menuOpen ? 'rotate(45deg) translate(5px,5px)' : '';
+  hamburger.querySelectorAll('span')[1].style.opacity  = menuOpen ? '0' : '1';
+  hamburger.querySelectorAll('span')[2].style.transform = menuOpen ? 'rotate(-45deg) translate(5px,-5px)' : '';
+});
+function closeMobileMenu() {
+  menuOpen = false;
+  mobileMenu.classList.remove('open');
+  hamburger.querySelectorAll('span').forEach(s => { s.style.transform=''; s.style.opacity=''; });
+}
+
+/* ══════════════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════════════ */
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+}, { threshold: 0.15 });
+revealEls.forEach(el => revealObs.observe(el));
+
+/* ══════════════════════════════════════
+   COUNTER ANIMATION
+══════════════════════════════════════ */
+const counters = document.querySelectorAll('[data-count]');
+const counterObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target, target = +el.dataset.count, suffix = el.dataset.suffix || '';
+    let duration = 1800, startTime = null;
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      const progress = Math.min((ts - startTime) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(ease * target) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = target + suffix;
+    }
+    requestAnimationFrame(step);
+    counterObs.unobserve(e.target);
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => counterObs.observe(c));
+
+/* ══════════════════════════════════════
+   GALLERY TABS
+══════════════════════════════════════ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ══════════════════════════════════════
+   BEFORE / AFTER SLIDERS
+══════════════════════════════════════ */
+function initBASlider(idx) {
+  const card   = document.getElementById('baCard' + idx);
+  const after  = document.getElementById('baAfter' + idx);
+  const handle = document.getElementById('baHandle' + idx);
+  if (!card) return;
+
+  function setPos(x) {
+    const rect = card.getBoundingClientRect();
+    const pct  = Math.min(Math.max((x - rect.left) / rect.width * 100, 0), 100);
+    after.style.clipPath  = `inset(0 ${100 - pct}% 0 0)`;
+    handle.style.left     = pct + '%';
+  }
+
+  let dragging = false;
+  handle.addEventListener('mousedown', e => { dragging = true; e.preventDefault(); });
+  document.addEventListener('mousemove', e => { if (dragging) setPos(e.clientX); });
+  document.addEventListener('mouseup',  () => { dragging = false; });
+  handle.addEventListener('touchstart', e => { dragging = true; }, { passive: true });
+  document.addEventListener('touchmove', e => { if (dragging) setPos(e.touches[0].clientX); }, { passive: true });
+  document.addEventListener('touchend', () => { dragging = false; });
+
+  // Hover auto-demo
+  card.addEventListener('mouseenter', () => setPos(card.getBoundingClientRect().right * 0.7));
+  card.addEventListener('mouseleave', () => setPos(card.getBoundingClientRect().left + card.offsetWidth * 0.5));
+  setPos(card.getBoundingClientRect().left + card.offsetWidth * 0.5);
+}
+[0,1,2].forEach(initBASlider);
+
+/* ══════════════════════════════════════
+   CINEMATIC SCROLL — CANVAS FRAMES
+══════════════════════════════════════ */
+const FRAME_BASE  = 'frames/frame_';
+const FRAME_EXT   = '.png';
+const TOTAL_FRAMES = 241;
+const MOBILE_SKIP  = window.innerWidth < 768 ? 3 : 1; // skip frames on mobile
+const PRELOAD_COUNT = 20;
+
+const canvas = document.getElementById('frame-canvas');
+const ctx    = canvas.getContext('2d');
+const wrapper = document.getElementById('cinematic-wrapper');
+const progressFill = document.getElementById('progressFill');
+
+let frames = new Array(TOTAL_FRAMES).fill(null);
+let currentFrame = 0;
+let pendingFrame  = 0;
+let rafPending    = false;
+
+function frameIndex(i) {
+  return String(i + 1).padStart(5, '0');
+}
+function frameUrl(i) {
+  return FRAME_BASE + frameIndex(i) + FRAME_EXT;
+}
+function loadFrame(i) {
+  if (frames[i]) return frames[i];
+  const img = new Image();
+  img.src = frameUrl(i);
+  frames[i] = img;
+  return img;
+}
+
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); drawFrame(currentFrame); });
+
+function drawFrame(idx) {
+  const img = frames[idx];
+  if (!img || !img.complete || img.naturalWidth === 0) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+  const w = img.naturalWidth  * scale;
+  const h = img.naturalHeight * scale;
+  const x = (canvas.width  - w) / 2;
+  const y = (canvas.height - h) / 2;
+  ctx.drawImage(img, x, y, w, h);
+}
+
+function renderFrame(idx) {
+  pendingFrame = idx;
+  if (rafPending) return;
+  rafPending = true;
+  requestAnimationFrame(() => {
+    rafPending = false;
+    if (pendingFrame !== currentFrame || !frames[pendingFrame] || !frames[pendingFrame].complete) {
+      // Try nearby loaded frame
+      let best = pendingFrame;
+      for (let d = 0; d < 5; d++) {
+        const lo = pendingFrame - d, hi = pendingFrame + d;
+        if (lo >= 0 && frames[lo] && frames[lo].complete && frames[lo].naturalWidth > 0) { best = lo; break; }
+        if (hi < TOTAL_FRAMES && frames[hi] && frames[hi].complete && frames[hi].naturalWidth > 0) { best = hi; break; }
+      }
+      currentFrame = best;
+    } else {
+      currentFrame = pendingFrame;
+    }
+    drawFrame(currentFrame);
+  });
+}
+
+// Preload first 20 frames eagerly
+for (let i = 0; i < Math.min(PRELOAD_COUNT, TOTAL_FRAMES); i++) {
+  const img = loadFrame(i);
+  if (i === 0) img.onload = () => drawFrame(0);
+}
+
+// Lazy load rest in batches
+function lazyLoad() {
+  for (let i = PRELOAD_COUNT; i < TOTAL_FRAMES; i += MOBILE_SKIP) {
+    loadFrame(i);
+  }
+}
+setTimeout(lazyLoad, 1500);
+
+// Scroll handler
+function onScroll() {
+  const rect   = wrapper.getBoundingClientRect();
+  const total  = wrapper.offsetHeight - window.innerHeight;
+  const scrolled = -rect.top;
+  const progress = Math.max(0, Math.min(1, scrolled / total));
+  const frameIdx = Math.min(Math.floor(progress * (TOTAL_FRAMES - 1)), TOTAL_FRAMES - 1);
+  renderFrame(frameIdx);
+  progressFill.style.height = (progress * 100) + '%';
+}
+
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll(); // initial call
+
+/* ══════════════════════════════════════
+   4D TILT ON CARDS
+══════════════════════════════════════ */
+document.querySelectorAll('.service-card, .testimonial-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = e.clientX - r.left - r.width / 2;
+    const y = e.clientY - r.top - r.height / 2;
+    const tiltX = -(y / (r.height / 2)) * 12;
+    const tiltY =  (x / (r.width  / 2)) * 12;
+    card.style.transform = `perspective(800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(10px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transition = 'transform 0.5s var(--ease-smooth)';
+    card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateZ(0)';
+    setTimeout(() => card.style.transition = '', 500);
+  });
+  card.addEventListener('mouseenter', () => {
+    card.style.transition = 'transform 0.1s ease, box-shadow 0.4s, border-color 0.4s';
+  });
+});
+
+/* ══════════════════════════════════════
+   BOOKING HANDLER
+══════════════════════════════════════ */
+function handleBooking(btn) {
+  const input = btn.previousElementSibling;
+  if (!input.value || !input.value.includes('@')) {
+    input.style.borderColor = 'var(--accent)';
+    input.placeholder = 'Please enter a valid email';
+    setTimeout(() => {
+      input.style.borderColor = '';
+      input.placeholder = 'Your email address';
+    }, 2000);
+    return;
+  }
+  btn.textContent = '✓ We\'ll be in touch!';
+  btn.style.background = '#1a8a4a';
+  btn.disabled = true;
+  input.value = '';
+}
+
+/* ══════════════════════════════════════
+   PARALLAX (subtle)
+══════════════════════════════════════ */
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const heroVideo = document.getElementById('hero-video');
+  if (heroVideo) heroVideo.style.transform = `scale(1) translateY(${scrollY * 0.25}px)`;
+}, { passive: true });
+</script>
+</body>
+</html>
